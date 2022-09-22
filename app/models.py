@@ -5,8 +5,17 @@ from flask import current_app
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from sqlalchemy import func
 from app import db, login
+
+from sqlalchemy import func
+
+
+association_between_user_internet_protocol_address = db.Table(
+    "association_between_user_internet_protocol_address",
+    db.Model.metadata,
+    db.Column("user_id", db.ForeignKey("user.id")),
+    db.Column("internet_protocol_address_id", db.ForeignKey("internet_protocol_address.id")),
+)
 
 class User(UserMixin, db.Model):
     __tablename__ = "user"
@@ -43,3 +52,9 @@ class User(UserMixin, db.Model):
         except:
             return
         return User.query.get(id)
+
+
+class InternetProtocolAddress(db.Model):
+    __tablename__ = "internet_protocol_address"
+    id = db.Column(db.Integer, primary_key=True)
+    ip_address = db.Column(IPAddressType)
